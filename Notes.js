@@ -4,6 +4,19 @@ const fs = require('fs');
 const error = chalk.red.bold;
 const success = chalk.green.bold;
 
+const loadNotes = function(){
+    try{
+        const dataBuffer = fs.readFileSync('notes.json');
+        return(JSON.parse(dataBuffer.toString()));
+    } catch(e) {//if no such file exists then return empty 
+        return [];
+    }
+}
+
+const saveNotes = function(notes){
+    fs.writeFileSync('notes.json', JSON.stringify(notes));
+}
+
 const addNote = function(title, body){
     const existing_notes = loadNotes();
     const duplicate_notes = existing_notes.filter((note) => {
@@ -20,19 +33,25 @@ const addNote = function(title, body){
     }
 
     //saving the updated notes
-    fs.writeFileSync('notes.json', JSON.stringify(existing_notes));
+    saveNotes(existing_notes);
     console.log(success("Note created!"));
 }
 
-const loadNotes = function(){
-    try{
-        const dataBuffer = fs.readFileSync('notes.json');
-        return(JSON.parse(dataBuffer.toString()));
-    } catch(e) {//if no such file exists then return empty 
-        return [];
+const removeNote = function(title){
+    const existing_notes = loadNotes();
+    const filtered_notes = existing_notes.filter((note) => {
+        return title !== note.title;
+    });
+
+    if(filtered_notes.length < existing_notes){
+        saveNotes(filtered_notes);
+        console.log(success("Note removed!"));
+    } else{
+        console.log(error("No notes removed!"));
     }
 }
 
 module.exports = {
-    addNote: addNote
+    addNote: addNote,
+    removeNote: removeNote
 }
