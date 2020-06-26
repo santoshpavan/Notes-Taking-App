@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/santoshpavan/Notes-Taking-App#readme",
   "dependencies": {
+    "chalk": "^2.4.1",
     "validator": "^10.8.0"
   }
 }
