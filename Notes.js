@@ -22,14 +22,17 @@ const addNote = (title, body) => {
     const duplicate_note = existing_notes.find( (note) => title === note.title ); //list of duplicate notes
 
     if(!duplicate_note){
-        existing_notes.push({
-            title: title,
-            body: body
-        });
-        
-        //saving the updated notes
-        saveNotes(existing_notes);
-        console.log(success("Note created!"));
+        if(body.length == 0){
+            console.log(error("The body cannot be empty."));
+        } else{
+            existing_notes.push({
+                title: title,
+                body: body 
+            });
+            //saving the updated notes
+            saveNotes(existing_notes);
+            console.log(success("Note created!"));
+        }
     } else{
         console.log(error("Title already exists!"));
     }
@@ -56,8 +59,21 @@ const listNotes = () => {
     }
 }
 
+const readNote = (title) => {
+    // const existing_notes = loadNotes();
+    const note_req = loadNotes().find( (note) => note.title === title);
+    if(note_req){
+        console.log("Title:", chalk.magenta.bold(note_req.title));
+        console.log("Body: ")
+        note_req.body.split(", ").forEach( (point) => console.log(chalk.blue(point.trim())) );
+    } else{
+        console.log(error("Note not found."));
+    }
+}
+
 module.exports = {
     addNote: addNote,
     removeNote: removeNote,
     listNotes: listNotes,
+    readNote: readNote
 }
