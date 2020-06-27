@@ -19,9 +19,9 @@ const saveNotes = (notes) => {
 
 const addNote = (title, body) => {
     const existing_notes = loadNotes();
-    const duplicate_notes = existing_notes.filter( (note) => title === note.title ); //list of duplicate notes
+    const duplicate_note = existing_notes.find( (note) => title === note.title ); //list of duplicate notes
 
-    if(duplicate_notes.length == 0){
+    if(!duplicate_note){
         existing_notes.push({
             title: title,
             body: body
@@ -46,7 +46,18 @@ const removeNote = (title) => {
     }
 }
 
+const listNotes = () => {
+    const existing_notes = loadNotes();
+    if(existing_notes.length === 0){
+        console.log(error("There are no notes. Please make one."));
+    } else{
+        console.log('Your notes are-');
+        existing_notes.forEach( (note) => console.log(chalk.blue(note.title)));
+    }
+}
+
 module.exports = {
     addNote: addNote,
-    removeNote: removeNote
+    removeNote: removeNote,
+    listNotes: listNotes,
 }
